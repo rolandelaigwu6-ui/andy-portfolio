@@ -43,14 +43,14 @@ export function HomeHero() {
       </motion.div>
 
       <div className="hero-photo-stage" aria-label="Portraits of Andy Okoh Abounu">
-        <motion.figure className={portraits[0].className} style={{ y: imageDrift }} initial={reduceMotion ? false : { clipPath: "inset(100% 0 0 0)" }} animate={reduceMotion ? { clipPath: "inset(0% 0 0 0)" } : { clipPath: "inset(0% 0 0 0)", scale: [1, 1.025, 1] }} transition={{ clipPath: { duration: 1.15, delay: delay(.34), ease: [0.77, 0, 0.18, 1] }, scale: { duration: 14, repeat: Infinity, ease: "easeInOut", delay: 1.5 } }}>
+        <motion.figure className={portraits[0].className} style={{ y: imageDrift }} initial={reduceMotion ? false : { clipPath: "inset(100% 0 0 0)" }} animate={{ clipPath: "inset(0% 0 0 0)" }} transition={{ duration: 1.15, delay: delay(.34), ease: [0.77, 0, 0.18, 1] }}>
           <Image src={portraits[0].src} alt={portraits[0].alt} fill priority sizes="(max-width: 760px) 86vw, 43vw" className="object-cover" style={{ objectPosition: portraits[0].position }} />
           <figcaption>01 <span>Portrait</span></figcaption>
         </motion.figure>
-        <motion.figure className={portraits[1].className} initial={reduceMotion ? false : { clipPath: "inset(0 0 100% 0)", y: 34 }} animate={reduceMotion ? { clipPath: "inset(0)", y: 0 } : { clipPath: "inset(0)", y: [0, -9, 0] }} transition={{ clipPath: { duration: .9, delay: delay(.83), ease: [0.22, 1, 0.36, 1] }, y: { duration: 7.5, repeat: Infinity, ease: "easeInOut", delay: 1.8 } }}>
+        <motion.figure className={portraits[1].className} initial={reduceMotion ? false : { clipPath: "inset(0 0 100% 0)", y: 34 }} animate={{ clipPath: "inset(0)", y: 0 }} transition={{ duration: .9, delay: delay(.83), ease: [0.22, 1, 0.36, 1] }}>
           <Image src={portraits[1].src} alt={portraits[1].alt} fill loading="lazy" sizes="(max-width: 760px) 33vw, 18vw" className="object-cover" style={{ objectPosition: portraits[1].position }} />
         </motion.figure>
-        <motion.figure className={portraits[2].className} initial={reduceMotion ? false : { clipPath: "inset(100% 0 0 0)", x: 28 }} animate={reduceMotion ? { clipPath: "inset(0)", x: 0 } : { clipPath: "inset(0)", x: [0, 7, 0] }} transition={{ clipPath: { duration: .9, delay: delay(1.02), ease: [0.22, 1, 0.36, 1] }, x: { duration: 9, repeat: Infinity, ease: "easeInOut", delay: 2 } }}>
+        <motion.figure className={portraits[2].className} initial={reduceMotion ? false : { clipPath: "inset(100% 0 0 0)", x: 28 }} animate={{ clipPath: "inset(0)", x: 0 }} transition={{ duration: .9, delay: delay(1.02), ease: [0.22, 1, 0.36, 1] }}>
           <Image src={portraits[2].src} alt={portraits[2].alt} fill loading="lazy" sizes="(max-width: 760px) 48vw, 26vw" className="object-cover" style={{ objectPosition: portraits[2].position }} />
         </motion.figure>
         <motion.div className="hero-photo-note" initial={reduceMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .8, delay: delay(1.28) }}><span className="hero-photo-note-line" />A presence shaped by purpose</motion.div>

@@ -41,8 +41,8 @@ export default function About() {
       <ReadingProgress />
       <div className="container-editorial about-chapters-inner">
         {chapters.map((chapter, index) => <article key={chapter.number} className={`about-chapter ${index % 2 ? "about-chapter-offset" : ""}`}>
-          <ScrollReveal className="chapter-rail" variant="left"><span className="chapter-number">{chapter.number}</span><span className="chapter-rail-line" /></ScrollReveal>
-          <ScrollReveal className="chapter-copy" variant="mask"><p className="eyebrow text-bronze">Chapter {chapter.number}</p><h2 className="display-type chapter-title">{chapter.title}</h2><ScrollHighlightText className="chapter-body" text={chapter.body} />
+          <ScrollReveal className="chapter-rail" variant="left" delay={index * 55}><span className="chapter-number">{chapter.number}</span><span className="chapter-rail-line" /></ScrollReveal>
+          <ScrollReveal className="chapter-copy" variant="mask" delay={index * 55}><p className="eyebrow text-bronze">Chapter {chapter.number}</p><h2 className="display-type chapter-title">{chapter.title}</h2><ScrollHighlightText className="chapter-body" text={chapter.body} />
             {chapter.number === "01" && <div className="education-note"><span className="eyebrow">Education</span><p>{ABOUT.education.institution}<br /><span>{ABOUT.education.field} · {ABOUT.education.year}</span></p></div>}
           </ScrollReveal>
         </article>)}

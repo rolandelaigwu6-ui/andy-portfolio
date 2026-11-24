@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PORTFOLIO } from "@/content/portfolio";
 import { ScrollReveal } from "@/components/scroll-reveal";
 
@@ -11,15 +11,45 @@ const work = PORTFOLIO.images;
 
 export function WorkGallery() {
   const [active, setActive] = useState<number | null>(null);
+  const [current, setCurrent] = useState(0);
   const rail = useRef<HTMLDivElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
   const opener = useRef<HTMLElement | null>(null);
   const touchStart = useRef<number | null>(null);
   const reduceMotion = useReducedMotion();
 
-  const show = (index: number, element: HTMLElement) => { opener.current = element; setActive(index); };
+  const show = (index: number, element: HTMLElement) => { opener.current = element; setCurrent(index); setActive(index); };
   const close = () => setActive(null);
-  const move = (direction: number) => setActive((index) => index === null ? null : (index + direction + work.length) % work.length);
+  const move = useCallback((direction: number) => {
+    if (active === null) return;
+    const next = (active + direction + work.length) % work.length;
+    setActive(next);
+    setCurrent(next);
+  }, [active]);
+
+  useEffect(() => {
+    const node = rail.current;
+    if (!node) return;
+    let frame = 0;
+    const updateCurrent = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const center = node.getBoundingClientRect().left + node.clientWidth / 2;
+        const slides = Array.from(node.querySelectorAll<HTMLElement>(".gallery-reveal"));
+        let closest = 0;
+        let closestDistance = Number.POSITIVE_INFINITY;
+        slides.forEach((slide, index) => {
+          const rect = slide.getBoundingClientRect();
+          const distance = Math.abs(rect.left + rect.width / 2 - center);
+          if (distance < closestDistance) { closest = index; closestDistance = distance; }
+        });
+        setCurrent(closest);
+      });
+    };
+    node.addEventListener("scroll", updateCurrent, { passive: true });
+    updateCurrent();
+    return () => { node.removeEventListener("scroll", updateCurrent); window.cancelAnimationFrame(frame); };
+  }, []);
 
   useEffect(() => {
     if (active === null) return;
@@ -37,7 +67,7 @@ export function WorkGallery() {
       document.body.style.overflow = "";
       opener.current?.focus();
     };
-  }, [active]);
+  }, [active, move]);
 
   const scrollRail = (direction: number) => {
     const node = rail.current;
@@ -47,7 +77,7 @@ export function WorkGallery() {
 
   return <>
     <div className="gallery-controls" aria-label="Gallery controls">
-      <span><b>0{active === null ? "1" : active + 1}</b> <i>/</i> 04</span>
+      <span><AnimatePresence mode="wait" initial={false}><motion.b key={current} initial={reduceMotion ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduceMotion ? undefined : { opacity: 0, y: -8 }} transition={{ duration: reduceMotion ? 0 : .24 }}>{`0${current + 1}`}</motion.b></AnimatePresence> <i>/</i> 04</span>
       <div><button type="button" aria-label="Previous gallery image" onClick={() => scrollRail(-1)}><ArrowLeft /></button><button type="button" aria-label="Next gallery image" onClick={() => scrollRail(1)}><ArrowRight /></button></div>
     </div>
     <div ref={rail} className="work-gallery-rail" role="region" aria-label="Past professional work photographs" tabIndex={0}>
