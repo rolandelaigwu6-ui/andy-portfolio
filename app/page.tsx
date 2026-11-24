@@ -1,222 +1,85 @@
-import Image from "next/image";
-import { Reveal } from "@/components/reveal";
-import { Button } from "@/components/button";
+import Link from "next/link";
+import { ArrowDownRight, ArrowRight, ArrowUpRight } from "lucide-react";
+import { HomeHero } from "@/components/home-hero";
+import { ExpertiseIndex } from "@/components/expertise-index";
+import { ScrollReveal } from "@/components/scroll-reveal";
 import { HOME } from "@/content/home";
 
 export default function Home() {
-  return (
-    <div className="relative overflow-x-hidden">
-      {/* SCENE 01 ??? THE OPENING */}
-      <section className="relative pt-24 pb-32 lg:pt-32 lg:pb-40 bg-[var(--deep-midnight)] overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/img/img1.jpeg"
-            alt="Andy Okoh Abounu portrait"
-            width={600}
-            height={400}
-            className="object-cover w-full h-64 lg:h-full rounded-t-2xl lg:rounded-none lg:rounded-l-0 lg:rounded-tr-2xl bg-[var(--deep-midnight)]"
-            loading="lazy"
-            priority
-          />
-        </div>
-        <div className="relative z-10 container-premium max-w-7xl mx-auto py-16 lg:py-24">
-          <Reveal className="text-center mb-12">
-            <span className="inline-flex items-center gap-2 text-champagne-gold font-sans font-bold text-sm tracking-widest uppercase">
-              <span className="w-2 h-2 rounded-full bg-champagne-gold"></span>
-              Media & Communications ??? Abuja, Nigeria
-            </span>
-            <h1 className="mt-8 text-5xl md:text-6xl lg:text-7xl font-display font-bold text-[var(--soft-ivory)] tracking-tight text-center">
-              ANDY OKOH ABOUNU
-            </h1>
-            <p className="mt-6 text-lg max-w-xl mx-auto leading-relaxed text-[var(--soft-ivory)]">
-              Building meaningful connections through strategic communication,
-              creative expression, and purposeful storytelling.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button asChild size="lg" className="w-full">
-                <a href="/portfolio">
-                  Explore My Work
-                </a>
-              </Button>
-              <Button variant="outline" asChild size="lg" className="w-full">
-                <a href="/about">
-                  Discover My Story
-                </a>
-              </Button>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+  return <main className="home-page">
+    <HomeHero />
 
-      {/* SCENE 02 ??? THE STORY BEGINS */}
-      <section className="bg-[var(--royal-navy)] py-24 lg:py-32">
-        <div className="relative z-10 container-premium max-w-7xl mx-auto">
-          <Reveal className="text-center">
-            <span className="inline-flex items-center gap-2 text-champagne-gold font-sans font-bold text-sm tracking-widest uppercase">
-              <span className="w-2 h-2 rounded-full bg-champagne-gold"></span>
-              Story
-            </span>
-            <h2 className="mt-6 text-3xl md:text-4xl lg:text-5xl font-display font-bold text-[var(--soft-ivory)] tracking-tight">
-              "More Than Communication. A Vision for Impact."
-            </h2>
-            <p className="mt-6 text-lg max-w-xl lg:text-xl leading-relaxed text-[var(--soft-ivory)]">
-              Andy Okoh Abounu is a Nigerian media and communications professional based in Abuja, Nigeria, with a background in Library and Information Science from Benue State University, where he graduated in 2023.
-            </p>
-          </Reveal>
-        </div>
-      </section>
+    <section id="introduction" className="home-introduction section-space">
+      <div className="container-editorial intro-grid">
+        <ScrollReveal className="intro-index"><span className="eyebrow">01 / The introduction</span><span className="intro-index-mark">AOA<span>—</span></span></ScrollReveal>
+        <ScrollReveal className="intro-copy">
+          <p className="eyebrow text-bronze">Purposeful communication. Meaningful impact.</p>
+          <h2 className="display-type intro-heading">Ideas take shape<br />when <em>stories connect.</em></h2>
+          <p className="intro-body">Andy Okoh Abounu is a Nigerian media and communications professional based in Abuja, Nigeria, with a background in Library and Information Science from Benue State University, where he graduated in 2023.</p>
+          <Link href="/about" className="arrow-link">Discover Andy&apos;s story <ArrowRight /></Link>
+        </ScrollReveal>
+      </div>
+      <div className="intro-edge-note" aria-hidden="true">A practice built on listening, clarity and purpose</div>
+    </section>
 
-      {/* SCENE 03 ??? THE EXPERTISE */}
-      <section className="py-24 lg:py-32" style={{ background: "var(--deep-midnight);">
-        <div className="relative z-10 container-premium max-w-7xl mx-auto">
-          <Reveal className="text-center mb-16">
-            <span className="inline-flex items-center gap-2 text-champagne-gold font-sans font-bold text-sm tracking-widest uppercase">
-              <span className="w-2 h-2 rounded-full bg-champagne-gold"></span>
-              Expertise
-            </span>
-            <h3 className="mt-6 text-2xl md:text-3xl font-display text-[var(--soft-ivory)] tracking-tight">
-              Where Strategy Meets Creativity
-            </h3>
-          </Reveal>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
-              <Reveal key={index} variant="fadeUp" className="p-4 rounded-lg border border-[var(--rich-charcoal)] bg-[var(--royal-navy)] hover:border-[var(--champagne-gold)] transition-colors">
-                <div className="w-8 h-8 rounded-full bg-[var(--champagne-gold)]/20 flex items-center justify-center mb-3">
-                  {index}
-                </div>
-                <h4 className="text-base font-bold text-[var(--soft-ivory)] mb-2">
-                  Discipline {index}
-                </h4>
-                <p className="text-sm text-[var(--soft-ivory)]/60">
-                  Description discipline {index}
-                </p>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+    <section className="home-expertise section-space">
+      <div className="container-editorial">
+        <ScrollReveal className="expertise-heading-row">
+          <div><p className="eyebrow text-champagne">02 / Areas of interest</p><h2 className="display-type expertise-heading">The work begins<br />with <em>a question.</em></h2></div>
+          <p className="expertise-heading-note">A range of professional interests connected by one belief: thoughtful communication can move people forward.</p>
+        </ScrollReveal>
+        <ScrollReveal><ExpertiseIndex /></ScrollReveal>
+      </div>
+    </section>
 
-      {/* SCENE 04 ??? PROFESSIONAL JOURNEY */}
-      <section className="py-24 lg:py-32">
-        <div className="relative z-10 container-premium max-w-7xl mx-auto">
-          <Reveal className="text-center mb-16">
-            <span className="inline-flex items-center gap-2 text-champagne-gold font-sans font-bold text-sm tracking-widest uppercase">
-              <span className="w-2 h-2 rounded-full bg-champagne-gold"></span>
-              Journey
-            </span>
-            <h4 className="mt-6 text-2xl md:text-3xl font-display text-[var(--royal-navy)] tracking-tight">
-              Working at the Intersection of Media and Leadership
-            </h4>
-          </Reveal>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div>
-              <Reveal className="mb-6">
-                <h5 className="font-display font-bold text-[var(--royal-navy)] mb-4">Media Aide</h5>
-                <p className="text-[var(--rich-charcoal)]/80">
-                  Currently based in Abuja, Andy serves as a Media Aide to Hon. Chief Dr. Nelson Godwin Alapa, Ph.D., where his professional responsibilities involve media support, digital communications, content development and public engagement.
-                </p>
-              </Reveal>
-              <Reveal>
-                <h5 className="font-display font-bold text-[var(--royal-navy)] mb-4">Professional Initiatives</h5>
-                <p className="text-[var(--rich-charcoal)]/80">
-                  He previously championed Miss Fashion Benue, a pageantry-oriented initiative that reflects his interests in fashion, talent discovery, personal development and empowerment. The initiative relates to confidence, visibility, creativity and individual potential.
-                </p>
-              </Reveal>
-            </div>
-            <div>
-              <Reveal>
-                <h5 className="font-display font-bold text-[var(--royal-navy)] mb-4">Education</h5>
-                <p className="text-[var(--rich-charcoal)]/80">
-                  Benue State University, Library and Information Science, Graduated in 2023.
-                </p>
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      </section>
+    <section className="home-experience">
+      <div className="experience-orbit" aria-hidden="true"><span>03</span></div>
+      <div className="container-editorial experience-feature">
+        <ScrollReveal className="experience-feature-kicker"><p className="eyebrow text-champagne">03 / In practice</p><span className="experience-rule" /></ScrollReveal>
+        <ScrollReveal className="experience-feature-copy">
+          <p className="experience-overline">Media · Leadership · Public engagement</p>
+          <h2 className="display-type experience-heading">Communication at<br />the intersection of<br /><em>media and leadership.</em></h2>
+          <p className="experience-description">{HOME.experienceHighlight.body}</p>
+          <Link href="/experience" className="experience-link">Explore the journey <ArrowUpRight size={17} /></Link>
+        </ScrollReveal>
+        <ScrollReveal className="experience-footnote"><span>Current role</span><strong>Media Aide</strong><span>Abuja, Nigeria</span></ScrollReveal>
+      </div>
+    </section>
 
-      {/* SCENE 05 ??? CREATIVE INITIATIVES */}
-      <section className="py-24 lg:py-32" style={{ background: "var(--deep-midnight);">
-        <div className="relative z-10 container-premium max-w-7xl mx-auto">
-          <Reveal className="text-center mb-16">
-            <span className="inline-flex items-center gap-2 text-champagne-gold font-sans font-bold text-sm tracking-widest uppercase">
-              <span className="w-2 h-2 rounded-full bg-champagne-gold"></span>
-              Initiatives
-            </span>
-            <h5 className="mt-6 text-2xl md:text-3xl font-display text-[var(--soft-ivory)] tracking-tight">
-              Creating Platforms for Visibility and Potential
-            </h5>
-          </Reveal>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div>
-              <Reveal>
-                <h6 className="font-display font-bold text-[var(--soft-ivory)] mb-4">Miss Fashion Benue</h6>
-                <p className="text-[var(--soft-ivory)]/70">
-                  A pageantry-oriented initiative reflecting his interest in fashion, talent discovery, personal development and empowerment.
-                </p>
-                <p className="mt-4 text-[var(--soft-ivory)]/60">
-                  Related to: confidence, visibility, creativity, individual potential.
-                </p>
-              </Reveal>
-            </div>
-            <div>
-              <Reveal>
-                <h6 className="font-display font-bold text-[var(--soft-ivory)] mb-4">Public Engagement</h6>
-                <p className="text-[var(--soft-ivory)]/70">
-                  Using creative platforms to inspire engagement and create opportunities.
-                </p>
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      </section>
+    <section className="home-philosophy section-space">
+      <div className="container-editorial philosophy-layout">
+        <ScrollReveal className="philosophy-aside"><p className="eyebrow">04 / A belief that guides the work</p><span className="philosophy-quote-mark">“</span></ScrollReveal>
+        <ScrollReveal className="philosophy-copy">
+          <p className="display-type philosophy-quote">{HOME.philosophy.quote}</p>
+          <div className="philosophy-signoff"><span className="eyebrow text-bronze">Professional philosophy</span><p>Communication is more than information.</p></div>
+        </ScrollReveal>
+      </div>
+    </section>
 
-      {/* SCENE 07 ??? CORE VALUES */}
-      <section className="py-24 lg:py-32" style={{ background: "var(--deep-midnight);">
-        <div className="relative z-10 container-premium max-w-7xl mx-auto">
-          <div className="grid grid-cols-3 gap-8 text-center">
-            <Reveal>
-              <div className="p-4 rounded-lg border border-[var(--champagne-gold)]/20 bg-[var(--royal-navy)]/5">
-                <div className="w-8 h-8 rounded-full bg-[var(--champagne-gold)]/30 flex items-center justify-center mx-auto mb-3">
-                  <span className="text-xl" aria-hidden="true">???</span>
-                </div>
-                <h4 className="font-display font-bold text-[var(--soft-ivory)]">PROFESSIONALISM</h4>
-              </div>
-            </Reveal>
-            <Reveal>
-              <div className="p-4 rounded-lg border border-[var(--champagne-gold)]/20 bg-[var(--royal-navy)]/5">
-                <div className="w-8 h-8 rounded-full bg-[var(--champagne-gold)]/30 flex items-center justify-center mx-auto mb-3">
-                  <span className="text-xl" aria-hidden="true">???</span>
-                </div>
-                <h4 className="font-display font-bold text-[var(--soft-ivory)]">INTEGRITY</h4>
-              </div>
-            </Reveal>
-            <Reveal>
-              <div className="p-4 rounded-lg border border-[var(--champagne-gold)]/20 bg-[var(--royal-navy)]/5">
-                <div className="w-8 h-8 rounded-full bg-[var(--champagne-gold)]/30 flex items-center justify-center mx-auto mb-3">
-                  <span className="text-xl" aria-hidden="true">???</span>
-                </div>
-                <h4 className="font-display font-bold text-[var(--soft-ivory)]">EXCELLENCE</h4>
-              </div>
-            </Reveal>
-          </div>
+    <section className="home-values">
+      <div className="container-editorial values-container">
+        <ScrollReveal className="values-intro"><p className="eyebrow text-champagne">05 / What matters</p><p>Principles that shape the process and the outcome.</p></ScrollReveal>
+        <div className="values-list" aria-label="Professional values">
+          {HOME.values.map((value, index) => <ScrollReveal key={value.label} delay={index * 90} className="value-line"><span className="value-number">0{index + 1}</span><span className="display-type value-word">{value.label}<sup>0{index + 1}</sup></span><ArrowDownRight size={23} aria-hidden="true" /></ScrollReveal>)}
         </div>
-      </section>
+      </div>
+    </section>
 
-      {/* SCENE 08 ??? CLOSING */}
-      <section className="bg-[var(--rich-charcoal)] py-24 lg:py-32">
-        <div className="relative z-10 container-premium max-w-7xl mx-auto text-center">
-          <Reveal>
-            <p className="text-[var(--champagne-gold)]/60 text-sm mb-8 tracking-widest uppercase">Every Great Legacy Begins With an Idea.</p>
-            <h3 className="mt-8 text-3xl md:text-4xl lg:text-5xl font-display font-bold text-[var(--soft-ivory)] tracking-tight">
-              "Let's create meaningful connections through communication, creativity, and purpose."
-            </h3>
-            <Button asChild size="lg" className="mt-8 w-fit">
-              <a href="/contact">Connect With Andy</a>
-            </Button>
-          </Reveal>
-        </div>
-      </section>
-    </div>
-  );
+    <section className="home-work-invitation section-space">
+      <div className="container-editorial work-invitation-inner">
+        <ScrollReveal className="work-invitation-index"><span className="eyebrow">06 / Selected work</span><span>Photography · Communication · Storytelling</span></ScrollReveal>
+        <ScrollReveal className="work-invitation-copy"><h2 className="display-type">Stories are made<br />to be <em>shared.</em></h2><p>Explore a selection of past professional work through the images and moments that make up the portfolio.</p><Link href="/portfolio" className="arrow-link">View the gallery <ArrowRight /></Link></ScrollReveal>
+      </div>
+    </section>
+
+    <section className="home-closing">
+      <ScrollReveal className="container-editorial closing-inner">
+        <p className="eyebrow text-champagne">A thoughtful conversation can be the start.</p>
+        <h2 className="display-type closing-heading">Let&apos;s create<br /><em>meaningful impact.</em></h2>
+        <p className="closing-description">Open to conversations around media, communication, creativity, and purposeful collaboration.</p>
+        <Link href="/contact" className="closing-action">Get in touch <ArrowUpRight size={18} /></Link>
+      </ScrollReveal>
+      <span className="closing-index" aria-hidden="true">AOA · 2026</span>
+    </section>
+  </main>;
 }

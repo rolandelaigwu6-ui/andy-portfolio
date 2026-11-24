@@ -7,7 +7,7 @@ import { PageTransition } from "@/components/page-transition";
 import "@/app/globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
-const playfair = Playfair_Display({ variable: "--font-playfair", subsets: ["latin"] });
+const playfair = Playfair_Display({ variable: "--font-cormorant", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
@@ -42,19 +42,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body
-        className={`${playfair.variable} min-h-full flex flex-col antialiased`}
-      >
-        <Suspense fallback={<div className="h-10" />}>
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <body className="min-h-screen antialiased">
+        <Suspense fallback={<div className="nav-shell nav-shell-fallback" aria-hidden="true"><div className="nav-inner"><span className="brand-lockup"><span className="brand-mark">AOA</span><span className="brand-name">Andy Okoh Abounu</span></span></div></div>}>
           <Navbar />
         </Suspense>
-        <Suspense fallback={<div className="h-10" />}>
+        <Suspense fallback={<div className="page-route">{children}</div>}>
           <PageTransition>{children}</PageTransition>
         </Suspense>
-        <Suspense fallback={<div className="h-10" />}>
-          <Footer />
-        </Suspense>
+        <Footer />
       </body>
     </html>
   );

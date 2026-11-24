@@ -1,43 +1,25 @@
-import { PortfolioGrid } from "@/components/portfolio-grid";
-import { Reveal } from "@/components/reveal";
-import { PORTFOLIO } from "@/content/portfolio";
+import { ScrollReveal } from "@/components/scroll-reveal";
+import { WorkGallery } from "@/components/work-gallery";
 
 export const metadata = {
-  title: "Portfolio | Andy Okoh Abounu",
-  description:
-    "Selected creative work by Andy Okoh Abounu — communications, design, photography and storytelling.",
+  title: "Portfolio",
+  description: "Selected professional work and event photographs from Andy Okoh Abounu's media and creative practice.",
 };
 
 export default function Portfolio() {
-  return (
-    <div className="flex flex-col">
-      <section className="bg-navy text-ivory pt-24 pb-20 lg:pt-32 lg:pb-28">
-        <div className="container-premium">
-          <Reveal className="text-center">
-            <span className="inline-flex items-center gap-2 text-gold font-sans font-bold text-sm tracking-widest uppercase">
-              <span className="w-2 h-2 rounded-full bg-gold"></span>
-              Portfolio
-            </span>
-            <h1 className="text-4xl md:text-5xl font-display font-bold leading-[1.1] text-balance mt-4">
-              {PORTFOLIO.heading}
-            </h1>
-            <p className="text-gold/90 text-lg font-sans max-w-xl mx-auto leading-relaxed">
-              {PORTFOLIO.subtitle}
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="bg-ivory section-pad">
-        <div className="container-premium">
-          <Reveal className="mb-14">
-            <p className="text-slate text-sm font-sans text-center max-w-2xl mx-auto">
-              {PORTFOLIO.notice}
-            </p>
-          </Reveal>
-          <PortfolioGrid />
-        </div>
-      </section>
-    </div>
-  );
+  return <main className="portfolio-page">
+    <section className="portfolio-opener">
+      <div className="container-editorial portfolio-opener-inner">
+        <ScrollReveal variant="left"><p className="eyebrow text-champagne">Selected professional work · 04</p></ScrollReveal>
+        <ScrollReveal variant="mask"><h1 className="display-type portfolio-title">Stories worth<br /><em>sharing.</em></h1></ScrollReveal>
+        <ScrollReveal className="portfolio-intro-row" variant="right"><p>Exploring communication through strategy, creativity, and visual storytelling.</p><span>01—04 <i> / </i> A visual record</span></ScrollReveal>
+      </div>
+      <div className="portfolio-opener-word" aria-hidden="true">WORK</div>
+    </section>
+    <section className="portfolio-gallery-section">
+      <div className="container-editorial portfolio-gallery-heading"><ScrollReveal variant="mask"><p className="eyebrow text-bronze">Four frames · One evolving practice</p><p className="gallery-heading-note">A selection of past professional work, presented through the moments captured in each photograph.</p></ScrollReveal></div>
+      <WorkGallery />
+    </section>
+    <section className="portfolio-endnote"><div className="container-editorial portfolio-endnote-inner"><p className="eyebrow">Media · Creativity · Perspective</p><p className="display-type">The frame holds<br />a <em>point of view.</em></p><span>Andy Okoh Abounu · Abuja, Nigeria</span></div></section>
+  </main>;
 }

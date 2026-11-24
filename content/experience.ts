@@ -9,7 +9,7 @@ export const EXPERIENCE = {
     {
       id: "current-role",
       title: "Media Aide",
-      organization: "Office of Hon. Chief Dr. Nelson Godwin Alapa, Ph.D.",
+      organization: "Hon. Chief Dr. Nelson Godwin Alapa, Ph.D.",
       location: "Abuja, Nigeria",
       date: "Current",
       dateNote: "No specific start date is claimed.",

@@ -59,12 +59,6 @@ export const HOME = {
       "Andy currently serves as Media Aide to Hon. Chief Dr. Nelson Godwin Alapa, Ph.D., supporting media activities, digital communications, content development, and public engagement.",
     linkText: "View Experience",
   },
-  featuredWork: {
-    heading: "Featured Work",
-    note:
-      "Approved project assets have not yet been supplied. The gallery below shows editable placeholders ready for real work.",
-    categories: ["Digital Communications", "Creative Design", "Photography & Storytelling"],
-  },
   philosophy: {
     heading: "Communication Is More Than Information.",
     quote:

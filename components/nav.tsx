@@ -2,118 +2,103 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
-import { Button } from "./button";
-import { cn } from "@/lib/utils";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ArrowUpRight, Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
-const NAV_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/experience", label: "Experience" },
-  { href: "/portfolio", label: "Portfolio" },
-  { href: "/insights", label: "Insights" },
-  { href: "/contact", label: "Contact" },
+const LINKS = [
+  { href: "/", label: "Home", number: "01" },
+  { href: "/about", label: "About", number: "02" },
+  { href: "/experience", label: "Experience", number: "03" },
+  { href: "/portfolio", label: "Portfolio", number: "04" },
+  { href: "/insights", label: "Insights", number: "05" },
+  { href: "/contact", label: "Contact", number: "06" },
 ];
 
 export function Navbar() {
   const pathname = usePathname();
+  const reduceMotion = useReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const lastLinkRef = useRef<HTMLAnchorElement>(null);
 
-  const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
-    return pathname.startsWith(href);
-  };
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
+    const pageContent = document.querySelector(".page-route");
+    const pageFooter = document.querySelector(".site-footer");
+    pageContent?.setAttribute("inert", "");
+    pageFooter?.setAttribute("inert", "");
+    const focusFrame = window.requestAnimationFrame(() => firstLinkRef.current?.focus());
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        triggerRef.current?.focus();
+      }
+      if (event.key === "Tab" && event.shiftKey && document.activeElement === firstLinkRef.current) {
+        event.preventDefault();
+        lastLinkRef.current?.focus();
+      } else if (event.key === "Tab" && !event.shiftKey && document.activeElement === lastLinkRef.current) {
+        event.preventDefault();
+        firstLinkRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+      pageContent?.removeAttribute("inert");
+      pageFooter?.removeAttribute("inert");
+    };
+  }, [isOpen]);
+
+  const isActive = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const transition = reduceMotion ? { duration: 0 } : { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const };
 
   return (
-    <nav
-      className="fixed top-0 z-50 w-full border-b border-navy/5 bg-ivory/90 backdrop-blur-sm"
-      aria-label="Main navigation"
-    >
-      <div className="container-premium">
-        <div className="flex flex-wrap items-center justify-between py-4 md:py-6 lg:py-8">
-          <Link
-            href="/"
-            className="flex items-center gap-2 font-display text-2xl font-bold text-navy tracking-tight"
-            title="Andy Okoh Abounu"
-          >
-            <span className="text-gold">A</span>OA.
+    <>
+      <header className={`nav-shell ${scrolled ? "nav-shell-scrolled" : ""}`}>
+        <div className="nav-inner">
+          <Link href="/" className="brand-lockup" aria-label="Andy Okoh Abounu — home">
+            <span className="brand-mark" aria-hidden="true"><span>A</span><span>O</span><span>A</span></span>
+            <span className="brand-name">Andy Okoh Abounu</span>
           </Link>
-
-          <div className="hidden md:flex items-center gap-8 text-sm font-sans font-medium">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "transition-colors",
-                  isActive(link.href)
-                    ? "text-gold"
-                    : "text-charcoal hover:text-gold",
-                  "relative after:content-[''] after:absolute after:left-[50%] after:bottom-[-2px] after:w-0 after:h-0.5 after:bg-gold after:transition-all after:duration-300 after:origin-center",
-                  isActive(link.href)
-                    ? "after:left-0 after:w-full after:origin-center"
-                    : undefined
-                )}
-                aria-current={isActive(link.href) ? "page" : undefined}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild
-              className="hidden sm:block"
-            >
-              <Link href="/contact">Get in Touch</Link>
-            </Button>
-            <button
-              className="md:hidden inline-flex items-center justify-center p-2 text-charcoal hover:text-navy focus-visible:outline-none"
-              onClick={() => setIsOpen((prev) => !prev)}
-              aria-expanded={isOpen}
-              aria-label="Toggle navigation menu"
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
+          <nav className="desktop-nav" aria-label="Main navigation">
+            {LINKS.map((link) => <Link key={link.href} href={link.href} aria-current={isActive(link.href) ? "page" : undefined} className={`desktop-nav-link ${isActive(link.href) ? "is-active" : ""}`}>
+              {link.label}<span className="nav-active-line" aria-hidden="true" />
+            </Link>)}
+          </nav>
+          <Link href="/contact" className="nav-contact">Let&apos;s talk <ArrowUpRight size={15} aria-hidden="true" /></Link>
+          <button ref={triggerRef} className="menu-toggle" type="button" aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={isOpen} aria-controls="mobile-navigation" onClick={() => setIsOpen((open) => !open)}>
+            <span>{isOpen ? "Close" : "Menu"}</span>{isOpen ? <X size={19} /> : <Menu size={20} />}
+          </button>
         </div>
+      </header>
 
-        {/* Mobile menu */}
-        {isOpen && (
-          <div
-            className="md:hidden border-t border-navy/5"
-            role="menu"
-            aria-label="Mobile navigation"
-          >
-            <div className="container-premium py-6 space-y-4">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className={cn(
-                    "block py-3 text-lg font-sans font-medium transition-colors",
-                    isActive(link.href) ? "text-gold" : "text-charcoal hover:text-gold"
-                  )}
-                  aria-current={isActive(link.href) ? "page" : undefined}
-                  role="menuitem"
-                >
-                  {link.label}
+      <AnimatePresence>
+        {isOpen && <motion.div id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Main navigation" className="mobile-menu" initial={{ clipPath: reduceMotion ? "inset(0)" : "inset(0 0 100% 0)" }} animate={{ clipPath: "inset(0)" }} exit={{ clipPath: reduceMotion ? "inset(0 0 100% 0)" : "inset(0 0 100% 0)" }} transition={transition}>
+          <div className="mobile-menu-inner">
+            <p className="eyebrow text-bronze">Navigate</p>
+            <nav aria-label="Mobile navigation">
+              {LINKS.map((link, index) => <motion.div key={link.href} initial={reduceMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} transition={{ ...transition, delay: reduceMotion ? 0 : index * 0.055 }}>
+                <Link ref={index === 0 ? firstLinkRef : index === LINKS.length - 1 ? lastLinkRef : undefined} href={link.href} aria-current={isActive(link.href) ? "page" : undefined} onClick={() => { setIsOpen(false); triggerRef.current?.focus(); }} className={`mobile-nav-link ${isActive(link.href) ? "is-active" : ""}`}>
+                  <span className="mobile-nav-number">{link.number}</span><span>{link.label}</span><ArrowUpRight size={20} aria-hidden="true" />
                 </Link>
-              ))}
-              <div className="pt-4">
-                <Button variant="primary" asChild className="w-full">
-                  <Link href="/contact">Get in Touch</Link>
-                </Button>
-              </div>
-            </div>
+              </motion.div>)}
+            </nav>
+            <p className="mobile-menu-note">Communicating ideas. Creating impact. Building legacies.</p>
           </div>
-        )}
-      </div>
-    </nav>
+        </motion.div>}
+      </AnimatePresence>
+    </>
   );
 }

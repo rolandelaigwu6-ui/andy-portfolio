@@ -1,144 +1,90 @@
 "use client";
 
+import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import { useState } from "react";
-import { Reveal } from "@/components/reveal";
-import { Button } from "@/components/button";
-import { CONTACT } from "@/content/contact";
+
+type Fields = { name: string; email: string; subject: string; message: string };
+type FieldName = keyof Fields;
+const emptyFields: Fields = { name: "", email: "", subject: "", message: "" };
+const fieldInfo: { id: FieldName; label: string; type: string }[] = [
+  { id: "name", label: "Your name", type: "text" },
+  { id: "email", label: "Email address", type: "email" },
+  { id: "subject", label: "What would you like to discuss?", type: "text" },
+];
+
+function MagneticSubmit({ disabled }: { disabled: boolean }) {
+  const reduceMotion = useReducedMotion();
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 180, damping: 16, mass: .15 });
+  const springY = useSpring(y, { stiffness: 180, damping: 16, mass: .15 });
+
+  const onPointerMove = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (reduceMotion || event.pointerType !== "mouse") return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    x.set((event.clientX - rect.left - rect.width / 2) * .12);
+    y.set((event.clientY - rect.top - rect.height / 2) * .12);
+  };
+
+  return <motion.button type="submit" disabled={disabled} className="contact-submit" style={{ x: springX, y: springY }} onPointerMove={onPointerMove} onPointerLeave={() => { x.set(0); y.set(0); }}>
+    <span>{disabled ? "Sending" : "Send an inquiry"}</span><span className="contact-submit-icon"><ArrowUpRight size={18} /></span>
+  </motion.button>;
+}
 
 export function ContactForm() {
-  const [formData, setFormData] = useState<Record<string, string>>({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [fields, setFields] = useState<Fields>(emptyFields);
+  const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [statusMessage, setStatusMessage] = useState("");
 
-  const validate = (): boolean => {
-    const nextErrors: Record<string, string> = {};
-    let valid = true;
-    CONTACT.formFields.forEach((field) => {
-      const value = (formData[field.id] || "").trim();
-      if (field.required && !value) {
-        nextErrors[field.id] = `${field.label} is required`;
-        valid = false;
-      }
-      if (field.id === "email" && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-        nextErrors[field.id] = "Please enter a valid email address";
-        valid = false;
-      }
-    });
-    setErrors(nextErrors);
-    return valid;
+  const update = (field: FieldName, value: string) => {
+    setFields((current) => ({ ...current, [field]: value }));
+    if (errors[field]) setErrors((current) => ({ ...current, [field]: undefined }));
   };
 
-  const handleChange = (id: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [id]: value }));
-    if (errors[id]) setErrors((prev) => ({ ...prev, [id]: "" }));
+  const validate = () => {
+    const next: Partial<Record<FieldName, string>> = {};
+    for (const key of Object.keys(fields) as FieldName[]) {
+      if (!fields[key].trim()) next[key] = "This field is required.";
+    }
+    if (fields.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email.trim())) next.email = "Enter a valid email address.";
+    setErrors(next);
+    return Object.keys(next).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setStatusMessage("");
     if (!validate()) return;
-    setStatus("submitting");
+    setStatus("sending");
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      const endpointConfigured = false;
-      if (!endpointConfigured) {
-        throw new Error("No submission endpoint configured yet.");
-      }
+      const response = await fetch("/api/contact", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(fields) });
+      const result = await response.json() as { delivered?: boolean; error?: string };
+      if (!response.ok || !result.delivered) throw new Error(result.error || "Your message could not be delivered.");
       setStatus("success");
-      setFormData({ name: "", email: "", subject: "", message: "" });
-    } catch {
+      setStatusMessage("Your message was delivered. Thank you for reaching out.");
+      setFields(emptyFields);
+    } catch (error) {
       setStatus("error");
+      setStatusMessage(error instanceof Error ? error.message : "Your message could not be delivered. Please try again later.");
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-      <Reveal className="space-y-1">
-        <label className="block text-sm font-sans font-medium text-navy">
-          {CONTACT.formFields[0].label}
-          {CONTACT.formFields[0].required && <span className="text-gold">*</span>}
-        </label>
-        <input
-          id="name"
-          type="text"
-          value={formData.name}
-          onChange={(e) => handleChange("name", e.target.value)}
-          className={`w-full px-4 py-3 rounded border text-charcoal focus:outline-none focus:ring-2 focus:ring-gold transition-colors ${
-            errors.name ? "border-red-500" : "border-navy/30"
-          }`}
-          placeholder="Your full name"
-        />
-        {errors.name && <span className="text-xs text-red-500 font-sans">{errors.name}</span>}
-      </Reveal>
-      <Reveal variant="fadeUp" className="space-y-1">
-        <label className="block text-sm font-sans font-medium text-navy">
-          {CONTACT.formFields[1].label}
-          {CONTACT.formFields[1].required && <span className="text-gold">*</span>}
-        </label>
-        <input
-          id="email"
-          type="email"
-          value={formData.email}
-          onChange={(e) => handleChange("email", e.target.value)}
-          className={`w-full px-4 py-3 rounded border text-charcoal focus:outline-none focus:ring-2 focus:ring-gold transition-colors ${
-            errors.email ? "border-red-500" : "border-navy/30"
-          }`}
-          placeholder="you@example.com"
-        />
-        {errors.email && <span className="text-xs text-red-500 font-sans">{errors.email}</span>}
-      </Reveal>
-      <Reveal variant="fadeUp" className="space-y-1">
-        <label className="block text-sm font-sans font-medium text-navy">
-          {CONTACT.formFields[2].label}
-          {CONTACT.formFields[2].required && <span className="text-gold">*</span>}
-        </label>
-        <input
-          id="subject"
-          type="text"
-          value={formData.subject}
-          onChange={(e) => handleChange("subject", e.target.value)}
-          className={`w-full px-4 py-3 rounded border text-charcoal focus:outline-none focus:ring-2 focus:ring-gold transition-colors ${
-            errors.subject ? "border-red-500" : "border-navy/30"
-          }`}
-          placeholder="Inquiry subject"
-        />
-        {errors.subject && <span className="text-xs text-red-500 font-sans">{errors.subject}</span>}
-      </Reveal>
-      <Reveal variant="fadeUp" className="space-y-1">
-        <label className="block text-sm font-sans font-medium text-navy">
-          {CONTACT.formFields[3].label}
-          {CONTACT.formFields[3].required && <span className="text-gold">*</span>}
-        </label>
-        <textarea
-          id="message"
-          value={formData.message}
-          onChange={(e) => handleChange("message", e.target.value)}
-          rows={5}
-          className={`w-full px-4 py-3 rounded border text-charcoal focus:outline-none focus:ring-2 focus:ring-gold transition-colors ${
-            errors.message ? "border-red-500" : "border-navy/30"
-          }`}
-          placeholder="Tell me about your project..."
-        />
-        {errors.message && <span className="text-xs text-red-500 font-sans">{errors.message}</span>}
-      </Reveal>
-      <Button type="submit" variant="primary" size="lg" disabled={status === "submitting"}>
-        {status === "submitting" ? "Sending…" : CONTACT.submitLabel}
-      </Button>
-      {status === "success" && (
-        <div className="p-4 rounded bg-green-50 text-green-800 text-sm font-sans border border-green-100">
-          Thank you — your message has been sent successfully.
-        </div>
-      )}
-      {status === "error" && (
-        <div className="p-4 rounded bg-red-50 text-red-800 text-sm font-sans border border-red-100">
-          Unable to send. A submission endpoint is not yet configured. Please email directly once contact details are provided.
-        </div>
-      )}
-      <p className="text-xs text-slate/50 font-sans mt-4">{CONTACT.note}</p>
-    </form>
-  );
+  return <form className="contact-form" onSubmit={submit} noValidate>
+    <div className="contact-form-fields">
+      {fieldInfo.map(({ id, label, type }, index) => <div className={`contact-field ${errors[id] ? "has-error" : ""}`} key={id}>
+        <label htmlFor={`contact-${id}`}><span>0{index + 1}</span>{label}</label>
+        <input id={`contact-${id}`} name={id} type={type} autoComplete={id === "name" ? "name" : id === "email" ? "email" : "off"} value={fields[id]} maxLength={id === "email" ? 254 : 180} aria-invalid={Boolean(errors[id])} aria-describedby={errors[id] ? `contact-${id}-error` : undefined} onChange={(event) => update(id, event.target.value)} />
+        {errors[id] && <p className="contact-field-error" id={`contact-${id}-error`}>{errors[id]}</p>}
+      </div>)}
+      <div className={`contact-field contact-field-message ${errors.message ? "has-error" : ""}`}>
+        <label htmlFor="contact-message"><span>04</span>Your message</label>
+        <textarea id="contact-message" name="message" rows={4} maxLength={5000} value={fields.message} aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? "contact-message-error" : undefined} onChange={(event) => update("message", event.target.value)} />
+        {errors.message && <p className="contact-field-error" id="contact-message-error">{errors.message}</p>}
+      </div>
+    </div>
+    <div className="contact-submit-row"><p>Andy is based in Abuja, Nigeria.<br />Your message will only be sent when the form service is available.</p><MagneticSubmit disabled={status === "sending"} /></div>
+    {statusMessage && <p role={status === "success" ? "status" : "alert"} className={`contact-status ${status === "success" ? "is-success" : "is-error"}`}>{statusMessage}</p>}
+  </form>;
 }

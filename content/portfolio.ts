@@ -1,43 +1,11 @@
-/**
- * Portfolio page content (agent.md §8).
- * No verified projects exist yet; all cards are clearly marked placeholders.
- */
-
+/** Approved professional work gallery. Captions describe visible moments only. */
 export const PORTFOLIO = {
-  heading: "Creative Work & Selected Projects",
-  subtitle:
-    "Exploring communication through strategy, creativity, and visual storytelling.",
-  filters: [
-    "All",
-    "Photography",
-    "Graphic Design",
-    "Digital Media",
-    "Communications",
-    "Content Creation",
+  heading: "Stories worth sharing.",
+  subtitle: "Exploring communication through strategy, creativity, and visual storytelling.",
+  images: [
+    { src: "/images/img4.jpeg", alt: "Andy at an indoor event beside a participant wearing a sash", caption: "An event moment, captured in company." },
+    { src: "/images/img5.jpeg", alt: "Andy speaking at an event beside a participant wearing a sash", caption: "A moment of public address." },
+    { src: "/images/img6.jpeg", alt: "Andy speaking into a microphone at an event", caption: "A voice carried into the room." },
+    { src: "/images/img7.jpeg", alt: "Andy standing at an event holding a presentation folder", caption: "A pause between words and ideas." },
   ],
-  notice:
-    "No verified individual project case studies have been supplied. Cards below are clearly marked development placeholders.",
-  projects: [
-    {
-      id: "placeholder-1",
-      title: "Project title comes here",
-      category: "Digital Communications",
-      description: "Approved project description will appear here once assets are provided.",
-      status: "placeholder",
-    },
-    {
-      id: "placeholder-2",
-      title: "Project title comes here",
-      category: "Creative Design",
-      description: "Approved project description will appear here once assets are provided.",
-      status: "placeholder",
-    },
-    {
-      id: "placeholder-3",
-      title: "Project title comes here",
-      category: "Photography & Storytelling",
-      description: "Approved project description will appear here once assets are provided.",
-      status: "placeholder",
-    },
-  ],
-};
+} as const;

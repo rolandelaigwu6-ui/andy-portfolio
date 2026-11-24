@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 export const metadata = {
-  title: "Article | Insights | Andy Okoh Abounu",
+  title: "Article | Insights",
   description:
     "Insights on strategic communications, media, leadership, and creative entrepreneurship.",
 };

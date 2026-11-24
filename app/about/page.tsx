@@ -1,126 +1,60 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { Reveal } from "@/components/reveal";
-import { PortraitPlaceholder } from "@/components/portrait-placeholder";
+import { ArrowUpRight } from "lucide-react";
+import { ScrollReveal } from "@/components/scroll-reveal";
+import { ReadingProgress } from "@/components/reading-progress";
+import { ScrollHighlightText } from "@/components/scroll-highlight-text";
 import { ABOUT } from "@/content/about";
 import { SITE } from "@/content/site";
 
 export const metadata = {
-  title: "About Andy Okoh Abounu",
-  description:
-    "Discover the journey, philosophy, and professional interests shaping Andy Okoh Abounu, a media and communications professional based in Abuja, Nigeria.",
+  title: "About",
+  description: "The background, professional direction and philosophy of Andy Okoh Abounu.",
 };
 
+const chapters = [
+  { number: "01", title: "Background", body: ABOUT.biography },
+  { number: "02", title: "Professional direction", body: `His professional interests and experience span ${ABOUT.interests.slice(0, -1).join(", ").toLowerCase()} and ${ABOUT.interests.at(-1)?.toLowerCase()}.` },
+  { number: "03", title: "Purpose", body: ABOUT.journey[0] },
+  { number: "04", title: "Professional journey", body: ABOUT.journey[1] },
+  { number: "05", title: "Beyond the profession", body: "Beyond his professional engagements, he maintains a strong interest in leadership, personal development, creative entrepreneurship, institutional development, human development and societal advancement." },
+];
+
 export default function About() {
-  return (
-    <div className="flex flex-col">
-      {/* Hero */}
-      <section className="bg-navy text-ivory pt-24 pb-20 lg:pt-32 lg:pb-28">
-        <div className="container-premium">
-          <Reveal className="text-center space-y-6">
-            <span className="inline-flex items-center gap-2 text-gold font-sans font-bold text-sm tracking-widest uppercase">
-              <span className="w-2 h-2 rounded-full bg-gold"></span>
-              About
-            </span>
-            <h1 className="text-4xl md:text-5xl font-display font-bold leading-[1.1] text-balance">
-              {ABOUT.hero.heading}
-            </h1>
-            <p className="text-gold/90 text-lg font-sans max-w-xl mx-auto leading-relaxed">
-              {ABOUT.hero.subtitle}
-            </p>
-          </Reveal>
+  return <main className="about-page">
+    <section className="about-opener">
+      <div className="container-editorial about-opener-grid">
+        <div className="about-opener-copy">
+          <ScrollReveal variant="left"><p className="eyebrow text-bronze">A personal introduction · Abuja, Nigeria</p></ScrollReveal>
+          <ScrollReveal variant="mask"><h1 className="display-type about-title">Behind the<br /><em>communication.</em><br />Beyond the creative.</h1></ScrollReveal>
+          <ScrollReveal variant="right"><p className="about-deck">A story shaped by curiosity, purposeful communication and the belief that ideas can open new possibilities.</p></ScrollReveal>
         </div>
-      </section>
+        <ScrollReveal className="about-portrait-wrap" variant="scale">
+          <figure className="image-frame about-portrait-frame"><Image src="/images/img2.jpeg" alt="Portrait of Andy Okoh Abounu" fill priority sizes="(max-width: 760px) 82vw, 39vw" className="about-portrait" /></figure>
+          <p className="about-portrait-caption"><span>Andy Okoh Abounu</span><span>Media &amp; Communications Professional</span></p>
+        </ScrollReveal>
+      </div>
+      <div className="about-opener-index" aria-hidden="true">A / 01</div>
+    </section>
 
-      {/* Biography */}
-      <section className="bg-ivory section-pad">
-        <div className="container-premium">
-          <Reveal className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-            <div className="lg:col-span-4">
-              <PortraitPlaceholder className="w-full h-80 bg-navy rounded-lg mb-6" />
-              <div className="space-y-3">
-                <span className="text-gold font-sans font-bold text-sm tracking-widest uppercase">Location</span>
-                <p className="text-slate text-sm font-sans">{SITE.location}</p>
-                <span className="mt-6 block text-gold font-sans font-bold text-sm tracking-widest uppercase">Education</span>
-                <p className="text-slate text-sm font-sans">
-                  {ABOUT.education.institution} — {ABOUT.education.field}, {ABOUT.education.year}
-                </p>
-                <span className="mt-6 block text-gold font-sans font-bold text-sm tracking-widest uppercase">Motto</span>
-                <p className="text-slate text-sm font-sans italic">“{ABOUT.motto}”</p>
-              </div>
-            </div>
-            <div className="lg:col-span-8">
-              <h2 className="text-3xl md:text-4xl font-bold text-navy tracking-tight mb-6">The Story</h2>
-              <p className="text-charcoal text-lg leading-relaxed mb-8 font-sans">
-                {ABOUT.biography}
-              </p>
-              {ABOUT.journey.map((paragraph, i) => (
-                <p key={i} className="text-charcoal text-lg leading-relaxed mb-8 font-sans">
-                  {paragraph}
-                </p>
-              ))}
-              <div className="pt-8 border-t border-navy/10">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 text-gold font-sans font-bold underline underline-offset-4 hover:text-navy transition-colors"
-                >
-                  Start a Conversation <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+    <section className="about-chapters" aria-label="About Andy, six chapters">
+      <ReadingProgress />
+      <div className="container-editorial about-chapters-inner">
+        {chapters.map((chapter, index) => <article key={chapter.number} className={`about-chapter ${index % 2 ? "about-chapter-offset" : ""}`}>
+          <ScrollReveal className="chapter-rail" variant="left"><span className="chapter-number">{chapter.number}</span><span className="chapter-rail-line" /></ScrollReveal>
+          <ScrollReveal className="chapter-copy" variant="mask"><p className="eyebrow text-bronze">Chapter {chapter.number}</p><h2 className="display-type chapter-title">{chapter.title}</h2><ScrollHighlightText className="chapter-body" text={chapter.body} />
+            {chapter.number === "01" && <div className="education-note"><span className="eyebrow">Education</span><p>{ABOUT.education.institution}<br /><span>{ABOUT.education.field} · {ABOUT.education.year}</span></p></div>}
+          </ScrollReveal>
+        </article>)}
+        <article className="about-chapter about-philosophy-chapter">
+          <ScrollReveal className="chapter-rail" variant="left"><span className="chapter-number">06</span><span className="chapter-rail-line" /></ScrollReveal>
+          <ScrollReveal className="chapter-copy" variant="mask"><p className="eyebrow text-bronze">Chapter 06 · Philosophy</p><h2 className="display-type chapter-title">A standard<br /><em>to return to.</em></h2><p className="about-values">Professionalism <span>•</span> Integrity <span>•</span> Excellence</p><p className="about-motto">“{SITE.motto}”</p></ScrollReveal>
+        </article>
+      </div>
+    </section>
 
-      {/* Professional Interests */}
-      <section className="bg-navy section-pad">
-        <div className="container-premium">
-          <Reveal className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-ivory tracking-tight">Professional Interests</h2>
-            <p className="mt-4 text-gold/80 font-sans">Areas that shape his work</p>
-          </Reveal>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {ABOUT.interests.map((interest) => (
-              <Reveal key={interest} variant="fadeUp" className="p-6 rounded-lg border border-navy/30 bg-navy/40 text-center">
-                <span className="text-slate/50 font-sans text-sm">{interest}</span>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Personal Interests */}
-      <section className="bg-ivory section-pad">
-        <div className="container-premium">
-          <Reveal className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-navy tracking-tight">Personal Interests</h2>
-          </Reveal>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-            {ABOUT.personalInterests.map((interest) => (
-              <Reveal key={interest} variant="fadeUp" className="p-6 rounded-lg border border-navy/5 bg-white/30 text-center">
-                <span className="text-slate font-sans text-sm">{interest}</span>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Philosophy & Motto */}
-      <section className="bg-gold section-pad">
-        <div className="container-premium">
-          <Reveal className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-navy tracking-tight mb-6">
-              Professional Philosophy
-            </h2>
-            <p className="text-2xl md:text-3xl font-display text-navy font-bold mb-4">
-              {SITE.philosophy}
-            </p>
-            <p className="text-navy/90 text-lg font-sans max-w-xl mx-auto mb-8 leading-relaxed">
-              “{ABOUT.motto}”
-            </p>
-          </Reveal>
-        </div>
-      </section>
-    </div>
-  );
+    <section className="about-education-strip">
+      <div className="container-editorial education-strip-inner"><p className="eyebrow">The foundation</p><p className="display-type">Library &amp; Information Science</p><p>Benue State University <span>·</span> Graduated 2023</p><Link href="/experience" aria-label="See professional experience"><ArrowUpRight size={19} /></Link></div>
+    </section>
+  </main>;
 }

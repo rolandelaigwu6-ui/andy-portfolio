@@ -1,77 +1,39 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { Reveal } from "@/components/reveal";
-import { INSIGHTS } from "@/content/insights";
+import { ArrowUpRight } from "lucide-react";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 export const metadata = {
-  title: "Insights | Andy Okoh Abounu",
-  description:
-    "Ideas, perspectives and insights on strategic communications, media, leadership, and creative entrepreneurship by Andy Okoh Abounu.",
+  title: "Insights",
+  description: "Themes and questions in media, communication, leadership and creative practice.",
 };
 
+const topics = [
+  ["01", "Strategic communications", "The choices that give a message purpose, direction and clarity."],
+  ["02", "Media & society", "How people, institutions and information shape public life."],
+  ["03", "Leadership", "The role of responsibility, trust and vision in moving people forward."],
+  ["04", "Digital storytelling", "New ways to bring ideas and audiences together."],
+  ["05", "Creative entrepreneurship", "Making room for ideas, initiative and meaningful opportunity."],
+  ["06", "Personal development", "The ongoing work of learning, reflection and growth."],
+];
+
 export default function Insights() {
-  return (
-    <div className="flex flex-col">
-      <section className="bg-navy text-ivory pt-24 pb-20 lg:pt-32 lg:pb-28">
-        <div className="container-premium">
-          <Reveal className="text-center">
-            <span className="inline-flex items-center gap-2 text-gold font-sans font-bold text-sm tracking-widest uppercase">
-              <span className="w-2 h-2 rounded-full bg-gold"></span>
-              Insights
-            </span>
-            <h1 className="text-4xl md:text-5xl font-display font-bold leading-[1.1] text-balance mt-4">
-              {INSIGHTS.heading}
-            </h1>
-            <p className="text-gold/90 text-lg font-sans max-w-xl mx-auto leading-relaxed">
-              {INSIGHTS.subtitle}
-            </p>
-          </Reveal>
-        </div>
-      </section>
+  return <main className="insights-page">
+    <section className="insights-opener">
+      <div className="container-editorial insights-opener-inner">
+        <ScrollReveal variant="left"><p className="eyebrow text-bronze">An editorial space · 05</p></ScrollReveal>
+        <ScrollReveal variant="mask"><h1 className="display-type insights-title">Ideas,<br /><em>perspectives</em><br />&amp; insights.</h1></ScrollReveal>
+        <ScrollReveal className="insights-deck" variant="right"><p>A place for considered writing on communication, media, leadership and the creative work of building what comes next.</p><span>Thoughts in progress · Abuja</span></ScrollReveal>
+      </div>
+      <div className="insights-aside-word" aria-hidden="true">NOTES</div>
+    </section>
 
-      <section className="bg-ivory section-pad">
-        <div className="container-premium">
-          {/* Future categories */}
-          <Reveal className="mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-navy tracking-tight text-center mb-6">
-              Explore by Category
-            </h2>
-            <p className="text-gold/80 text-sm font-sans text-center max-w-xl mx-auto mb-8">
-              Potential future article categories — articles will appear here once
-              approved content is provided.
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 justify-center">
-              {INSIGHTS.categories.map((category) => (
-                <div
-                  key={category}
-                  className="p-4 rounded-lg border border-navy/10 bg-navy/5 text-center text-sm font-sans text-slate hover:border-gold/50 transition-colors"
-                >
-                  {category}
-                </div>
-              ))}
-            </div>
-          </Reveal>
+    <section className="insights-topics-section">
+      <div className="container-editorial insights-topic-intro"><ScrollReveal variant="mask"><p className="eyebrow">Questions worth returning to</p><p className="display-type">A few of the themes<br />that <em>keep opening up.</em></p></ScrollReveal><ScrollReveal variant="right"><p className="insights-topic-copy">These subjects reflect Andy&apos;s professional interests and the questions that inform his point of view.</p></ScrollReveal></div>
+      <div className="container-editorial topic-list">
+        {topics.map(([number, title, description], index) => <ScrollReveal key={number} className="topic-row" variant={index % 2 ? "right" : "left"} delay={index * 45}><span className="topic-number">{number}</span><h2 className="display-type">{title}</h2><p>{description}</p><span className="topic-rule" aria-hidden="true" /></ScrollReveal>)}
+      </div>
+    </section>
 
-          {/* Empty state */}
-          <Reveal className="max-w-2xl mx-auto text-center">
-            <div className="flex items-center justify-center gap-2 text-gold mb-6">
-              <span className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-navy font-bold">
-                📝
-              </span>
-              <h2 className="text-2xl md:text-3xl font-bold text-navy">{INSIGHTS.emptyState.heading}</h2>
-            </div>
-            <p className="text-slate text-lg leading-relaxed font-sans mb-8">
-              {INSIGHTS.emptyState.body}
-            </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 text-gold font-sans font-bold underline underline-offset-4 hover:text-navy transition-colors"
-            >
-              Get in Touch <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Reveal>
-        </div>
-      </section>
-    </div>
-  );
+    <section className="insights-invitation"><div className="container-editorial insights-invitation-inner"><ScrollReveal><p className="eyebrow text-champagne">When a thought is ready to be shared</p><h2 className="display-type">The conversation<br /><em>continues.</em></h2><p>For now, the best ideas often begin with a conversation.</p><Link href="/contact" className="insights-contact">Start one here <ArrowUpRight size={17} /></Link></ScrollReveal><span className="insights-invitation-index">A / 05</span></div></section>
+  </main>;
 }
